@@ -1,0 +1,877 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boolanga for Aster DM Healthcare</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@600;700&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    /* Paper */
+    --paper: #faf8f3;
+    --paper-edge: #efece4;
+
+    /* Ink - one color, four weights */
+    --ink: #0d0d12;
+    --ink-700: #2a2a35;
+    --ink-500: #6b6b78;
+    --ink-300: #b8b6bf;
+    --ink-100: #d8d6dd;
+
+    /* Lines */
+    --line: rgba(13,13,18,0.10);
+    --line-strong: rgba(13,13,18,0.16);
+
+    /* One accent - navy-violet from Boolanga brand gradient (solid color for body emphasis) */
+    --accent: #3D4A8A;
+    --accent-soft: rgba(61,74,138,0.06);
+
+    /* Gradient endpoints for the wordmark (matches Boolanga business brand reference) */
+    --grad-1: #1a1d3a;
+    --grad-2: #5a6bb5;
+
+    --max: 920px;
+    --rhythm: 32px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, sans-serif;
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 1.65;
+    overflow-x: hidden;
+    text-rendering: optimizeLegibility;
+    letter-spacing: -0.005em;
+  }
+
+  /* Subtle paper grain */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1000;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.015 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    mix-blend-mode: multiply;
+  }
+
+  /* Typography */
+  h1, h2, h3 {
+    font-family: 'Inter', sans-serif;
+    color: var(--ink);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.1;
+  }
+
+  h1 { font-size: clamp(40px, 5.5vw, 68px); font-weight: 700; letter-spacing: -0.035em; line-height: 1.04; }
+  h2 { font-size: clamp(28px, 3.6vw, 42px); font-weight: 600; letter-spacing: -0.025em; line-height: 1.12; }
+  h3 { font-size: clamp(20px, 2.2vw, 26px); font-weight: 600; letter-spacing: -0.015em; }
+
+  p { color: var(--ink-700); }
+
+  /* Mono tag - only used for tiny tactical labels */
+  .mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    color: var(--ink-500);
+    text-transform: uppercase;
+  }
+
+  /* Document wrapper */
+  .doc {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 0 32px;
+    position: relative;
+    z-index: 2;
+  }
+
+  /* Header bar - fixed metadata across the top */
+  .doc-header {
+    max-width: var(--max);
+    margin: 0 auto;
+    padding: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .wordmark {
+    font-family: 'Comfortaa', system-ui, sans-serif;
+    font-weight: 700;
+    font-size: 24px;
+    letter-spacing: -0.04em;
+    text-decoration: none;
+    line-height: 1;
+    display: inline-block;
+    background: linear-gradient(135deg, var(--grad-1) 0%, var(--grad-2) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+  }
+
+  .doc-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--ink-500);
+    text-transform: uppercase;
+  }
+
+  /* Sections */
+  .section {
+    padding: 96px 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .section:last-child { border-bottom: none; }
+
+  /* PAGE 1 - Cover */
+  .cover {
+    padding: 120px 0 96px;
+  }
+
+  .cover-eyebrow {
+    color: var(--ink-700);
+    margin-bottom: 40px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+  }
+
+  .cover-title {
+    margin-bottom: 32px;
+  }
+
+  .cover-title .accent {
+    color: var(--accent);
+  }
+
+  .cover-sub {
+    font-size: 22px;
+    line-height: 1.45;
+    color: var(--ink-700);
+    max-width: 640px;
+    margin-bottom: 80px;
+    font-weight: 400;
+  }
+
+  /* Credibility row - pure typography, no boxes */
+  .creds {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    padding-top: 40px;
+    border-top: 1px solid var(--line);
+    margin-bottom: 80px;
+  }
+
+  .cred-num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 44px;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.035em;
+    margin-bottom: 12px;
+  }
+
+  .cred-label {
+    font-size: 14px;
+    color: var(--ink-500);
+    line-height: 1.4;
+    max-width: 200px;
+  }
+
+  /* Meta footer on cover */
+  .meta-row {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    gap: 72px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+  }
+
+  .meta-row .label {
+    color: var(--ink-300);
+    margin-bottom: 8px;
+  }
+
+  .meta-row .val {
+    font-weight: 600;
+    color: var(--ink);
+    font-size: 15px;
+  }
+
+  /* PAGE 2 - Insight */
+  .section-tag {
+    color: var(--ink-700);
+    margin-bottom: 24px;
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+  }
+
+  .insight-title {
+    margin-bottom: 56px;
+    max-width: 780px;
+  }
+
+  .insight-title .accent {
+    color: var(--accent);
+  }
+
+  /* Pull quote - the 200K moment, treated as editorial pull quote */
+  .pullquote {
+    margin: 64px 0 80px;
+    padding: 40px 0 40px 40px;
+    border-left: 3px solid var(--accent);
+  }
+
+  .pullquote-num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 96px;
+    line-height: 0.9;
+    color: var(--ink);
+    letter-spacing: -0.04em;
+    margin-bottom: 16px;
+  }
+
+  .pullquote-text {
+    font-size: 20px;
+    line-height: 1.45;
+    color: var(--ink-700);
+    max-width: 540px;
+    font-weight: 400;
+  }
+
+  .pullquote-source {
+    margin-top: 20px;
+    color: var(--ink-500);
+  }
+
+  /* Body paragraph - the reframe */
+  .reframe {
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--ink);
+    font-weight: 400;
+    max-width: 720px;
+    margin-bottom: 80px;
+    letter-spacing: -0.01em;
+  }
+
+  .reframe .accent {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* Five stages - clean editorial list, no boxes around pills */
+  .stages-label {
+    color: var(--ink-500);
+    margin-bottom: 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .stages-label h3 {
+    color: var(--ink);
+  }
+
+  .stages-hint {
+    color: var(--ink-300);
+  }
+
+  .stages {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .stage {
+    padding: 24px 20px;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    border-right: 1px solid var(--line);
+    text-align: left;
+    font-family: 'Inter', sans-serif;
+    color: var(--ink-500);
+    transition: all 0.2s ease;
+    position: relative;
+  }
+
+  .stage:last-child { border-right: none; }
+
+  .stage:hover {
+    background: var(--accent-soft);
+    color: var(--ink);
+  }
+
+  .stage.active {
+    background: var(--paper-edge);
+    color: var(--ink);
+  }
+
+  .stage.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+  }
+
+  .stage-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: var(--ink-300);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .stage.active .stage-num { color: var(--accent); }
+
+  .stage-name {
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 1.25;
+    letter-spacing: -0.005em;
+  }
+
+  /* Stage detail - clean text block, no decoration */
+  .stage-detail {
+    padding: 32px 0 8px;
+    min-height: 100px;
+    transition: opacity 0.25s;
+  }
+
+  .stage-detail-text {
+    font-size: 17px;
+    line-height: 1.6;
+    color: var(--ink-700);
+    max-width: 720px;
+  }
+
+  .stage-detail-text b {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* Modular note - single understated line, no colored box */
+  .modular-note {
+    margin-top: 56px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-500);
+    font-size: 15px;
+    max-width: 720px;
+    line-height: 1.55;
+  }
+
+  .modular-note b {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  /* PAGE 3 - Proof */
+  .proof-title {
+    margin-bottom: 56px;
+    max-width: 780px;
+  }
+
+  .proof-title .accent {
+    color: var(--accent);
+  }
+
+  /* Proof figures - typography-driven, no colored cards */
+  .proof-figures {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 64px;
+  }
+
+  .proof-fig {
+    padding: 40px 32px;
+    border-right: 1px solid var(--line);
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .proof-fig:last-child { border-right: none; }
+
+  .proof-fig:hover { background: var(--accent-soft); }
+
+  .proof-fig.expanded { background: var(--accent-soft); }
+
+  .proof-source {
+    color: var(--ink-500);
+    margin-bottom: 20px;
+    display: block;
+  }
+
+  .proof-num {
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -0.04em;
+    margin-bottom: 16px;
+  }
+
+  .proof-headline {
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 500;
+    line-height: 1.35;
+    margin-bottom: 16px;
+  }
+
+  .proof-detail {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.4s cubic-bezier(0.3, 0, 0.2, 1);
+  }
+
+  .proof-fig.expanded .proof-detail { max-height: 240px; }
+
+  .proof-detail-inner {
+    padding-top: 16px;
+    margin-top: 4px;
+    border-top: 1px solid var(--line);
+    font-size: 14px;
+    color: var(--ink-500);
+    line-height: 1.6;
+  }
+
+  .proof-hint {
+    margin-top: 16px;
+    color: var(--ink-300);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .proof-fig.expanded .proof-hint { color: var(--accent); }
+  .proof-hint::after { content: '+'; font-size: 14px; }
+  .proof-fig.expanded .proof-hint::after { content: '−'; }
+
+  /* Bridge line */
+  .bridge {
+    font-size: 22px;
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 720px;
+    margin-bottom: 80px;
+    letter-spacing: -0.01em;
+    font-weight: 400;
+  }
+
+  .bridge .accent {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* CTA - single line of clear next step, three contact methods as clean inline list */
+  .next-step {
+    padding-top: 56px;
+    border-top: 1px solid var(--line);
+  }
+
+  .next-tag {
+    color: var(--accent);
+    margin-bottom: 20px;
+    display: block;
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+  }
+
+  .next-title {
+    margin-bottom: 16px;
+    max-width: 720px;
+  }
+
+  .next-sub {
+    color: var(--ink-500);
+    font-size: 17px;
+    max-width: 580px;
+    margin-bottom: 48px;
+    line-height: 1.55;
+  }
+
+  /* Contact list - clean list with subtle hover */
+  .contacts {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contact {
+    display: grid;
+    grid-template-columns: 180px 1fr auto;
+    align-items: center;
+    padding: 24px 0;
+    border-top: 1px solid var(--line);
+    text-decoration: none;
+    color: var(--ink);
+    transition: all 0.2s ease;
+    gap: 24px;
+  }
+
+  .contact:last-child { border-bottom: 1px solid var(--line); }
+
+  .contact:hover {
+    padding-left: 12px;
+    color: var(--accent);
+  }
+
+  .contact-label {
+    color: var(--ink-500);
+  }
+
+  .contact:hover .contact-label { color: var(--accent); }
+
+  .contact-value {
+    font-weight: 500;
+    font-size: 17px;
+    letter-spacing: -0.01em;
+  }
+
+  .contact-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--ink-300);
+    font-size: 18px;
+    transition: all 0.2s ease;
+  }
+
+  .contact:hover .contact-arrow {
+    color: var(--accent);
+    transform: translateX(4px);
+  }
+
+  /* Signature */
+  .signature {
+    margin-top: 80px;
+    padding-top: 32px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+
+  .signature-line {
+    font-size: 15px;
+    color: var(--ink);
+    font-weight: 500;
+  }
+
+  .signature-line .role {
+    color: var(--ink-500);
+    font-weight: 400;
+    margin-left: 6px;
+  }
+
+  .signature-doc {
+    color: var(--ink-300);
+  }
+
+  /* Scroll reveal */
+  .reveal {
+    opacity: 0;
+    transform: translateY(16px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0, 0.2, 1);
+  }
+  .reveal.in { opacity: 1; transform: translateY(0); }
+
+  /* Mobile */
+  @media (max-width: 760px) {
+    body { font-size: 16px; }
+    .doc, .doc-header { padding: 24px; }
+    .doc-header { padding: 20px 24px; }
+    .cover { padding: 64px 0 56px; }
+    .section { padding: 56px 0; }
+    .cover-sub { font-size: 18px; margin-bottom: 56px; }
+    .creds { grid-template-columns: 1fr; gap: 32px; padding-top: 32px; margin-bottom: 56px; }
+    .cred-num { font-size: 36px; }
+    .meta-row { grid-template-columns: 1fr; gap: 20px; }
+    .pullquote-num { font-size: 64px; }
+    .pullquote { padding: 24px 0 24px 24px; margin: 40px 0 56px; }
+    .pullquote-text { font-size: 17px; }
+    .reframe { font-size: 18px; margin-bottom: 56px; }
+    .stages { grid-template-columns: 1fr 1fr; }
+    .stage { border-right: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .stage:nth-child(2n) { border-right: none; }
+    .stage:nth-last-child(-n+1) { border-bottom: none; }
+    .proof-figures { grid-template-columns: 1fr; }
+    .proof-fig { border-right: none; border-bottom: 1px solid var(--line); }
+    .proof-fig:last-child { border-bottom: none; }
+    .proof-num { font-size: 52px; }
+    .bridge { font-size: 18px; }
+    .contact { grid-template-columns: 1fr auto; gap: 12px; padding: 18px 0; }
+    .contact-label { grid-column: 1 / -1; margin-bottom: -8px; }
+    .signature { flex-direction: column; align-items: flex-start; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Document header - appears once at top -->
+<header class="doc-header">
+  <a href="#top" class="wordmark" aria-label="boolanga">boolanga</a>
+  <span class="doc-meta">DOC / ASTER / MAY 2026</span>
+</header>
+
+<!-- COVER -->
+<section class="cover doc" id="top">
+  <div class="mono cover-eyebrow">A 90-second read</div>
+
+  <h1 class="cover-title">
+    What we'd actually<br>
+    do at <span class="accent">Aster.</span>
+  </h1>
+
+  <p class="cover-sub">
+    38 hospitals. 133 clinics. 519 pharmacies. One operating layer behind the uniform every patient sees.
+  </p>
+
+  <div class="creds reveal">
+    <div>
+      <div class="cred-num">200K</div>
+      <div class="cred-label">Distributed staff served monthly</div>
+    </div>
+    <div>
+      <div class="cred-num">98%</div>
+      <div class="cred-label">Hygiene compliance achieved</div>
+    </div>
+    <div>
+      <div class="cred-num">35+</div>
+      <div class="cred-label">Markets running today</div>
+    </div>
+  </div>
+
+  <div class="meta-row">
+    <div>
+      <div class="mono label">Prepared for</div>
+      <div class="val">Vamsi Krishna</div>
+    </div>
+    <div>
+      <div class="mono label">From</div>
+      <div class="val">Hamdan Albakr</div>
+    </div>
+    <div>
+      <div class="mono label">Date</div>
+      <div class="val">May 2026</div>
+    </div>
+  </div>
+</section>
+
+<!-- INSIGHT -->
+<section class="section doc" id="insight">
+  <span class="mono section-tag">01 - The Insight</span>
+
+  <h2 class="insight-title reveal">
+    Staff equipment is rarely treated as <span class="accent">an operating system.</span>
+  </h2>
+
+  <div class="pullquote reveal">
+    <div class="pullquote-num">200K</div>
+    <p class="pullquote-text">
+      Distributed staff brought to 98% hygiene compliance through digital tracking.
+    </p>
+    <div class="mono pullquote-source">Live across 35+ markets today</div>
+  </div>
+
+  <p class="reframe reveal">
+    Most healthcare networks treat scrubs, badges, and uniforms as a <span class="accent">procurement line</span>. The networks that scale clean treat them as <span class="accent">infrastructure</span>. Same activity. Different mental model. Different outcomes.
+  </p>
+
+  <div class="stages-label reveal">
+    <h3>Five stages we run as one accountable layer</h3>
+    <span class="mono stages-hint">Click any to expand</span>
+  </div>
+
+  <div class="stages reveal">
+    <button class="stage active" data-stage="1">
+      <span class="stage-num">01</span>
+      <div class="stage-name">Design &amp; brand</div>
+    </button>
+    <button class="stage" data-stage="2">
+      <span class="stage-num">02</span>
+      <div class="stage-name">Procurement</div>
+    </button>
+    <button class="stage" data-stage="3">
+      <span class="stage-num">03</span>
+      <div class="stage-name">Logistics</div>
+    </button>
+    <button class="stage" data-stage="4">
+      <span class="stage-num">04</span>
+      <div class="stage-name">Digital issuance</div>
+    </button>
+    <button class="stage" data-stage="5">
+      <span class="stage-num">05</span>
+      <div class="stage-name">Compliance</div>
+    </button>
+  </div>
+
+  <div class="stage-detail" id="stageDetail">
+    <p class="stage-detail-text" id="stageText">
+      <b>Role-specific kit design</b> grounded in your brand, regulatory needs, and how staff move through a shift. Sampling and approval before anything goes to production.
+    </p>
+  </div>
+
+  <div class="modular-note reveal">
+    <b>Modular by design.</b> Take all five, or one. If your gear procurement is sorted, we layer in only the technology. If your software exists, we supply only the gear.
+  </div>
+</section>
+
+<!-- PROOF + NEXT -->
+<section class="section doc" id="next">
+  <span class="mono section-tag">02 - Proof of work</span>
+
+  <h2 class="proof-title reveal">
+    Rider gear or staff uniform, <span class="accent">the operation is identical.</span>
+  </h2>
+
+  <div class="proof-figures reveal">
+    <div class="proof-fig" data-proof="1" onclick="toggleProof(this)">
+      <span class="mono proof-source">Talabat · 8 markets</span>
+      <div class="proof-num">20%</div>
+      <div class="proof-headline">Gear spend recovered</div>
+      <div class="proof-detail">
+        <div class="proof-detail-inner">
+          Closed the offboarding loop and digitalised the issuance trail across the entire fleet. The same loop, in healthcare, plugs into your HRIS at staff termination.
+        </div>
+      </div>
+      <div class="mono proof-hint"><span>How we got it</span></div>
+    </div>
+
+    <div class="proof-fig" data-proof="2" onclick="toggleProof(this)">
+      <span class="mono proof-source">Talabat · 8 markets</span>
+      <div class="proof-num">4×</div>
+      <div class="proof-headline">Faster fleet onboarding</div>
+      <div class="proof-detail">
+        <div class="proof-detail-inner">
+          Manual issuance replaced with the Boolanga Equipment OS. Time per kit dropped from 3 minutes to 40 seconds. At Aster's hiring volume, that is days of operations time per month.
+        </div>
+      </div>
+      <div class="mono proof-hint"><span>How we got it</span></div>
+    </div>
+
+    <div class="proof-fig" data-proof="3" onclick="toggleProof(this)">
+      <span class="mono proof-source">Uber Eats · 14 markets</span>
+      <div class="proof-num">0</div>
+      <div class="proof-headline">Workload on client side</div>
+      <div class="proof-detail">
+        <div class="proof-detail-inner">
+          Boolanga absorbed the entire asset management layer. Uber Eats stopped operating it internally. The model maps to healthcare uniform programs identically.
+        </div>
+      </div>
+      <div class="mono proof-hint"><span>How we got it</span></div>
+    </div>
+  </div>
+
+  <p class="bridge reveal">
+    Distributed workforce. High turnover. Compliance pressure. Brand consistency at the front line. <span class="accent">The mechanics map to healthcare one for one.</span>
+  </p>
+
+  <div class="next-step reveal">
+    <span class="mono next-tag">Next step</span>
+    <h2 class="next-title">Thirty minutes. One honest map of where we fit.</h2>
+    <p class="next-sub">No brief, no deck. We walk through the five stages together, mark which apply at Aster, and you decide what to take forward.</p>
+
+    <div class="contacts">
+      <a href="https://calendly.com/hamdan-boolanga/discovery" target="_blank" rel="noopener" class="contact">
+        <span class="mono contact-label">Calendar</span>
+        <span class="contact-value">Book a 30 min slot</span>
+        <span class="contact-arrow">→</span>
+      </a>
+      <a href="mailto:hamdan@boolanga.com?subject=Boolanga%20for%20Aster%20DM%20Healthcare" class="contact">
+        <span class="mono contact-label">Email</span>
+        <span class="contact-value">hamdan@boolanga.com</span>
+        <span class="contact-arrow">→</span>
+      </a>
+      <a href="https://wa.me/36305538222" target="_blank" rel="noopener" class="contact">
+        <span class="mono contact-label">WhatsApp / Call</span>
+        <span class="contact-value">+36 30 553 8222</span>
+        <span class="contact-arrow">→</span>
+      </a>
+    </div>
+
+    <div class="signature">
+      <div class="signature-line">
+        Hamdan Albakr <span class="role">/ Territory MEA / Boolanga</span>
+      </div>
+      <div class="mono signature-doc">DOC / ASTER / MAY 2026 / V1</div>
+    </div>
+  </div>
+</section>
+
+<script>
+const STAGE_DATA = {
+  '1': '<b>Role-specific kit design</b> grounded in your brand, regulatory needs, and how staff move through a shift. Sampling and approval before anything goes to production.',
+  '2': '<b>One supply chain across every SKU.</b> Uniforms, badges, accessories, packaging. Quality control at batch level, regardless of volume. Single accountable vendor.',
+  '3': '<b>Warehousing, pre-kitting, and last-mile delivery</b> to every site in your network. Kits arrive labelled by role, sized by staff, and ready to issue on day one.',
+  '4': '<b>The Equipment OS.</b> Admins assign kit to a staff ID in 40 seconds. Or staff order through a controlled self-service portal. Everything tracked in one dashboard.',
+  '5': '<b>Replacement cycles, offboarding recovery, photo verification.</b> Audit-ready reporting designed for JCI, JCIA, and MoH cycles. Compliance becomes a query, not a project.'
+};
+
+document.querySelectorAll('.stage').forEach(stage => {
+  stage.addEventListener('click', () => {
+    document.querySelectorAll('.stage').forEach(s => s.classList.remove('active'));
+    stage.classList.add('active');
+    const detail = document.getElementById('stageDetail');
+    detail.style.opacity = '0';
+    setTimeout(() => {
+      document.getElementById('stageText').innerHTML = STAGE_DATA[stage.dataset.stage];
+      detail.style.opacity = '1';
+    }, 150);
+  });
+});
+
+function toggleProof(card) {
+  const wasOpen = card.classList.contains('expanded');
+  document.querySelectorAll('.proof-fig').forEach(c => c.classList.remove('expanded'));
+  if (!wasOpen) card.classList.add('expanded');
+}
+
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('in');
+      io.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
